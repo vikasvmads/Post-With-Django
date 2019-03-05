@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+
+    <p> {{ comment.content }}</p>
+    <hr/>
+    <footer>via {{ comment.user }} on {{ comment.timestamp }}</footer>
+    {% for child_comment in comment.children %}
+        <blockquote>
+                <p> {{ child_comment.content }}</p>
+                <footer>via {{ child_comment.user }} on {{ child_comment.timestamp }}</footer>
+        </blockquote>
+    {% endfor %}
+    <form action="" method="POST">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <input type = "hidden" name="parent_id" value="{{ comment.id }}"/>
+            <input type = "submit" value="Reply" class="btn btn-default"/>
+    </form>
+  <hr/>
+</div>
+
+
+{% endblock content %}
